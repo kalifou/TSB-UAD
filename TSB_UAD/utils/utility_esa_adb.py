@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Apr 10 10:54:56 2025
+Created on Thu Apr 10 16:16:38 2025
 
 @author: trao_ka
 """
-
-import warnings
-warnings.filterwarnings('ignore')
-
-import numpy as np
-import math
-import matplotlib.pyplot as plt
-import pandas as pd
-from TSB_UAD.models.distance import Fourier
-from TSB_UAD.models.feature import Window
-from TSB_UAD.utils.slidingWindows import find_length
-from TSB_UAD.utils.visualisation import plotFig
-from sklearn.preprocessing import MinMaxScaler
 
 #from TSB_UAD.models.norma import NORMA
 from TSB_UAD.models.iforest import IForest
@@ -34,7 +21,15 @@ from TSB_UAD.models.cnn import cnn
 from TSB_UAD.models.damp import DAMP
 from TSB_UAD.models.sand import SAND
 
-from TSB_UAD.vus.metrics import get_metrics
+import numpy as np
+import math
+
+from TSB_UAD.models.distance import Fourier
+from TSB_UAD.models.feature import Window
+from TSB_UAD.utils.slidingWindows import find_length
+
+from sklearn.preprocessing import MinMaxScaler
+
 
 import argparse
 
@@ -137,12 +132,7 @@ def run_AD_model(data, label, model_name):
         measure.set_param()
         clf.decision_function(measure=measure)
     
-    if model_name == 'MatrixProfile':
-    
-        clf.score(query_length=2*slidingWindow,dataset=x)
-        score = clf.score
-    else:   
-        score = clf.decision_scores_
+    score = clf.decision_scores_
     
     if model_name == 'OCSVM':
         score = np.array([score[0]]*math.ceil((slidingWindow-1)/2) + list(score) + [score[-1]]*((slidingWindow-1)//2))
@@ -157,10 +147,7 @@ def run_AD_model(data, label, model_name):
 def get_channel_values_and_labels(channel_index, dataframe):
     return dataframe['channel_' + str(channel_index)].values, dataframe['is_anomaly_channel_' + str(channel_index)].values
 
-
-if __name__ == "__main__":
-
-
+def get_arguments_esa_experiments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -168,37 +155,48 @@ if __name__ == "__main__":
         "--model",
         help="Select the AD model to use among: "
         + "{'DAMP', 'SAND (offline)', 'SAND (online)','IForest', 'LOF', 'MatrixProfile', 'PCA', 'POLY', 'OCSVM', 'LSTM', 'CNN'}.", 
-        type=str
+        type=str,
+        required=True
     )
+    
+    parser.add_argument(
+        "-ch",
+        "--channel-number",
+        help="Select the Telemmetry channel number to use (univariate analysis). Example - Channel 15", 
+        type=int,
+        required=True
+    )
+    parser.add_argument(
+        "-pthd",
+        "--path-to-esa-dataset",
+        help="Provide with the path to the ESA-ADB dataset split of interest . Example for mission 1: {3_months.train.csv, 42_months.train.csv, 84_months.train.csv, ..}", 
+        type=str,
+        required=False,
+        default="../../data/ESA-ADB/data/preprocessed/multivariate/ESA-Mission1-semi-supervised/3_months.train.csv"
+    )
+    
+    parser.add_argument(
+        "-tm",
+        "--activate-test-mode",
+        help="Dry run of the model on a subset of your dataset and channel.", 
+        action="store_true",
+        default=False,
+    )
+    
+    parser.add_argument(
+        "-plt",
+        "--activate-plotting",
+        help="Activate the plotting functionality for analyzing the results.", 
+        action="store_true",
+        default=False,
+    )
+    
     args = parser.parse_args()
+    
     model_name = args.model
+    path_to_esa_dataset = args.path_to_esa_dataset
+    channel_index_of_interrest = args.channel_number
+    test_mode = args.activate_test_mode
+    activate_plotting = args.activate_plotting
     
-    path_esa_mission_1 = "/localhome/trao_ka/Documents/projects/hai_vouchers/"
-    path_esa_mission_1 += "anomaly_detection_gallileo/esa_extension/ESA-ADB/data/preprocessed/multivariate/"
-    path_esa_mission_1 += "ESA-Mission1-semi-supervised/3_months.train.csv"
-    
-    df_esa_mission_1_train = pd.read_csv(path_esa_mission_1)
-    channel_index_of_interrest = 15
-    
-    m1_values, m1_labels = get_channel_values_and_labels(channel_index=channel_index_of_interrest, 
-                                                         dataframe=df_esa_mission_1_train)
-    # Prepare data for unsupervised method
-
-    #filepath = '../../data/benchmark/ECG/MBA_ECG805_data.out'
-    #df = pd.read_csv(filepath, header=None).dropna().to_numpy()
-    
-    #name = filepath.split('/')[-1]
-    name = "ESA-ADB-MISSION-1-TRAIN"
-    max_length = 10000000
-    
-    data = m1_values[:max_length].astype(float)
-    label = m1_labels[:max_length].astype(int)
-    
-    score_local, slidingWindow_local = run_AD_model(data, label, model_name)
-    plotFig(data, label, score_local, slidingWindow_local, fileName=name, modelName=model_name)
-    
-    
-    #Print accuracy
-    results = get_metrics(score_local, label, metric="all", slidingWindow=slidingWindow_local)
-    for metric in results.keys():
-        print(metric, ':', results[metric])
+    return model_name, path_to_esa_dataset, channel_index_of_interrest, test_mode, activate_plotting
