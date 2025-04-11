@@ -24,10 +24,7 @@ class TestAdESA(unittest.TestCase):
         for model_name in LIST_AD_MODELS:
             #assert model_name in LIST_AD_MODELS    
             
-            path_to_esa_dataset = "/localhome/trao_ka/Documents/projects/hai_vouchers" 
-            path_to_esa_dataset +="/anomaly_detection_gallileo/esa_extension/ESA-ADB" 
-            path_to_esa_dataset +="/data/preprocessed/multivariate/"
-            path_to_esa_dataset += "ESA-Mission1-semi-supervised/3_months.train.csv"
+            path_to_esa_dataset = "data/ESA-ADB/data/preprocessed/multivariate/ESA-Mission1-semi-supervised/3_months.train.csv"
             
             channel_index_of_interrest = 15
             test_mode = True
