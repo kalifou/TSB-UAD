@@ -229,7 +229,7 @@ class SAND():
 		# - Storing in to_add all the clusters that have to be merged with the existing clusters
 		# - Storing in new_c tyhe new clusters to be added.
 		for cluster,cluster_subseq in zip(clusters,cluster_subseqs):
-			min_dist = np.Inf
+			min_dist = np.inf
 			tmp_index = -1
 			for index_o,origin_cluster in enumerate(self.clusters):
 				new_dist = self._sbd(origin_cluster[0],cluster[0])[0]
@@ -402,7 +402,7 @@ class SAND():
 
 	def _ncc_c(self,x, y):
 		den = np.array(norm(x) * norm(y))
-		den[den == 0] = np.Inf
+		den[den == 0] = np.inf
 
 		x_len = len(x)
 		fft_size = 1 << (2*x_len-1).bit_length()
