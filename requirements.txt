@@ -1,4 +1,4 @@
-numpy>=1.24.3
+numpy>=2.2.4
 matplotlib>=3.7.5
 pandas>=2.0.3
 arch>=5.3.1
