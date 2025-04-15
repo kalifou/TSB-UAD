@@ -38,7 +38,7 @@ LIST_AD_MODELS = ['DAMP', 'SAND (offline)', 'SAND (online)',
                   'POLY', 'OCSVM', 'LSTM', 'CNN'
                   ]
 
-def run_AD_model(data, label, model_name):
+def run_AD_model(data, label, model_name, n_jobs=1):
     
     assert model_name in LIST_AD_MODELS
     
@@ -74,17 +74,23 @@ def run_AD_model(data, label, model_name):
     
         clf = SAND(pattern_length=slidingWindow,subsequence_length=4*(slidingWindow))
         x = data
-        clf.fit(x,online=True,alpha=0.5,init_length=5000,batch_size=2000,verbose=True,overlaping_rate=int(4*slidingWindow))
+        clf.fit(x, 
+                online=True, 
+                alpha=0.5, 
+                init_length=5000, 
+                batch_size=2000, 
+                verbose=True, 
+                overlaping_rate=int(4*slidingWindow))
     
     elif model_name == 'IForest':
     
-        clf = IForest(n_jobs=1)
+        clf = IForest(n_jobs=n_jobs)
         x = X_data
         clf.fit(x)
     
     elif model_name == 'LOF':
     
-        clf = LOF(n_neighbors=20, n_jobs=1)
+        clf = LOF(n_neighbors=20, n_jobs=n_jobs)
         x = X_data
         clf.fit(x)
     
@@ -172,7 +178,16 @@ def get_arguments_esa_experiments():
         help="Provide with the path to the ESA-ADB dataset split of interest . Example for mission 1: {3_months.train.csv, 42_months.train.csv, 84_months.train.csv, ..}", 
         type=str,
         required=False,
-        default="../../data/ESA-ADB/data/preprocessed/multivariate/ESA-Mission1-semi-supervised/3_months.train.csv"
+        default="data/ESA-ADB/data/preprocessed/multivariate/ESA-Mission1-semi-supervised/3_months.train.csv"
+    )
+    
+    parser.add_argument(
+        "-pths",
+        "--path-to-save-logs",
+        help="Provide with the path to save the results of the experiments.}", 
+        type=str,
+        required=False,
+        default="results/ESA_ADB/"
     )
     
     parser.add_argument(
@@ -191,12 +206,23 @@ def get_arguments_esa_experiments():
         default=False,
     )
     
+    parser.add_argument(
+        "--n-jobs",
+        help="Number of jobs to use to run the models.", 
+        type=int,
+        required=False,
+        default=1,
+    )
+    
     args = parser.parse_args()
     
     model_name = args.model
     path_to_esa_dataset = args.path_to_esa_dataset
+    path_to_save_logs = args.path_to_save_logs
     channel_index_of_interrest = args.channel_number
     test_mode = args.activate_test_mode
     activate_plotting = args.activate_plotting
+    n_jobs = args.n_jobs
     
-    return model_name, path_to_esa_dataset, channel_index_of_interrest, test_mode, activate_plotting
+    
+    return model_name, path_to_esa_dataset, path_to_save_logs, channel_index_of_interrest, test_mode, activate_plotting, n_jobs
