@@ -73,7 +73,7 @@ def main(model_name,
     if not os.path.exists(metrics_dir_local):
         os.makedirs(metrics_dir_local)
     
-    results = get_metrics(score=score_local, labels=label, metric="auc", slidingWindow=slidingWindow_local)
+    #results = get_metrics(score=score_local, labels=label, metric="auc", slidingWindow=slidingWindow_local)
     #for metric in results.keys():
     #ipdb.set_trace(context=15)
          
