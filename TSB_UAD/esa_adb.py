@@ -59,9 +59,9 @@ def main(model_name,
     #for metric in results.keys():
     #    print(metric, ':', results[metric])
     
-    metrics_dir_local = path_to_save_logs + "/metrics/"  + model_name
+    metrics_dir_local = path_to_save_logs + "/metrics/"  + model_name + "/"
     scores_dir_local = path_to_save_logs + "/scores/" + name_to_dataset_split + "/" + model_name + "/score/"
-    score_filename = metrics_dir_local + whole_name_experiments + ".out"
+    score_filename = scores_dir_local + "/"+ whole_name_experiments + ".out"
     
     # Logging of the scores
     if not os.path.exists(scores_dir_local):

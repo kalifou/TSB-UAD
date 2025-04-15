@@ -25,12 +25,20 @@ class TestAdESA(unittest.TestCase):
             #assert model_name in LIST_AD_MODELS    
             
             path_to_esa_dataset = "data/ESA-ADB/data/preprocessed/multivariate/ESA-Mission1-semi-supervised/3_months.train.csv"
+            path_to_save_logs = "results/tests/"
             
             channel_index_of_interrest = 15
             test_mode = True
             activate_plotting = False
             
-            main(model_name, path_to_esa_dataset, channel_index_of_interrest, test_mode, activate_plotting)
+            main(model_name, 
+                 path_to_esa_dataset, 
+                 path_to_save_logs,
+                 channel_index_of_interrest, 
+                 test_mode, 
+                 activate_plotting,
+                 n_jobs=1)
+            
             print("Passed the dry-running with: ", str(model_name))
 
 if __name__ == "__main__":
