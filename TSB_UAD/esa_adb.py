@@ -53,12 +53,6 @@ def main(model_name,
         plotFig(data, label, score_local, slidingWindow_local, fileName=whole_name_experiments, modelName=model_name)
         plt.show()
     
-    #return score_local, name , model_name
-    #Print accuracy
-    #results = get_metrics(score_local, label, metric="all", slidingWindow=slidingWindow_local)
-    #for metric in results.keys():
-    #    print(metric, ':', results[metric])
-    
     metrics_dir_local = path_to_save_logs + "/metrics/"  + model_name + "/"
     scores_dir_local = path_to_save_logs + "/scores/" + name_to_dataset_split + "/" + model_name + "/score/"
     score_filename = scores_dir_local + "/"+ whole_name_experiments + ".out"
@@ -73,9 +67,10 @@ def main(model_name,
     if not os.path.exists(metrics_dir_local):
         os.makedirs(metrics_dir_local)
     
-    #results = get_metrics(score=score_local, labels=label, metric="auc", slidingWindow=slidingWindow_local)
-    #for metric in results.keys():
-    #ipdb.set_trace(context=15)
+    if not test_mode:
+        vus_i = get_metrics(score=score_local, labels=label, metric="vus", slidingWindow=slidingWindow_local)
+        range_auc_i = get_metrics(score=score_local, labels=label, metric="range_auc", slidingWindow=slidingWindow_local)
+        print("Model :", model_name, vus_i, range_auc_i)
          
     
     pass
