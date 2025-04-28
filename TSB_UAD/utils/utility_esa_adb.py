@@ -33,7 +33,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 import argparse
 
-LIST_AD_MODELS = ['DAMP', 'SAND (offline)', 'SAND (online)',
+LIST_AD_MODELS = ['DAMP', 'SAND_offline', 'SAND_online',
                   'IForest', 'LOF', 'MatrixProfile', 'PCA', 
                   'POLY', 'OCSVM', 'LSTM', 'CNN'
                   ]
@@ -63,14 +63,14 @@ def run_AD_model(data, label, model_name, n_jobs=1):
         clf.fit(x)
         
         
-    elif model_name == 'SAND (offline)':
+    elif model_name == 'SAND_offline':
     
     
         clf = SAND(pattern_length=slidingWindow,subsequence_length=4*(slidingWindow))
         x = data
         clf.fit(x,overlaping_rate=int(1.5*slidingWindow))
     
-    elif model_name == 'SAND (online)':
+    elif model_name == 'SAND_online':
     
         clf = SAND(pattern_length=slidingWindow,subsequence_length=4*(slidingWindow))
         x = data
@@ -160,7 +160,7 @@ def get_arguments_esa_experiments():
         "-m",
         "--model",
         help="Select the AD model to use among: "
-        + "{'DAMP', 'SAND (offline)', 'SAND (online)','IForest', 'LOF', 'MatrixProfile', 'PCA', 'POLY', 'OCSVM', 'LSTM', 'CNN'}.", 
+        + "{'DAMP', 'SAND_offline', 'SAND_online','IForest', 'LOF', 'MatrixProfile', 'PCA', 'POLY', 'OCSVM', 'LSTM', 'CNN'}.", 
         type=str,
         required=True
     )

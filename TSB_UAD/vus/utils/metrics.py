@@ -311,8 +311,6 @@ class metricor:
     
     def RangeAUC(self, labels, score, window=0, percentage=0, plot_ROC=False, AUC_type='window'):
         
-        import ipdb
-        ipdb.set_trace(context=15)
         # AUC_type='window'/'percentage'
         score_sorted = -np.sort(-score)
         
