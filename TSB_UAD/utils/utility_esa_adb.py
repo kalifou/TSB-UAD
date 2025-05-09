@@ -226,3 +226,24 @@ def get_arguments_esa_experiments():
     
     
     return model_name, path_to_esa_dataset, path_to_save_logs, channel_index_of_interrest, test_mode, activate_plotting, n_jobs
+
+def is_anomaly_channel(ch):
+    if "is_anomaly" in ch:
+        return ch
+        
+def get_anomaly_labels(list_labels_l):
+    
+    local_list = list()
+    
+    for item_i in list_labels_l:
+        if is_anomaly_channel(item_i):
+            local_list.append(item_i)
+    
+    return local_list
+
+def redistribute_anomalies_to_binary(element_e):
+    
+    if element_e > 0:
+        return int(1) #np.int64(1)
+    else:
+        return int(0) #np.int64(0)
