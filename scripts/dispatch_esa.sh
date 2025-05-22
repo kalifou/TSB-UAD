@@ -1,12 +1,20 @@
 #!/bin/bash
 
-channel=15
+START=1
+END=76
 
-
-for dataset in ESA-Mission1-semi-supervised; do # ESA-Mission2-semi-supervised; do
-    for algorith_i in DAMP LOF IForest MatrixProfile SAND_offline SAND_online PCA POLY OCSVM LSTM CNN; do 
-        echo $algorith_i $dataset $channel
-        sbatch login_node_terrabyte.sh $algorith_i $dataset $channel
+for channel in $(seq $START $END); do
+    for dataset in ESA-Mission1-semi-supervised; do # ESA-Mission2-semi-supervised; do
+	# Cheaper algorithm evaluations - 7 hours
+	for algorith_i_1 in DAMP IForest MatrixProfile SAND_offline PCA POLY CNN; do
+            echo $algorith_i_1 $dataset $channel
+            sbatch login_node_terrabyte_cheap.sh $algorith_i_1 $dataset $channel
+	done
+	# More expensive evaluations - 20 hours
+	for algorith_i_2 in LOF SAND_online OCSVM LSTM; do                                         
+            echo $algorith_i_2 $dataset $channel
+            sbatch login_node_terrabyte_expensive.sh $algorith_i_2 $dataset $channel
+        done
+	
     done
-done
-
+done 
