@@ -9,6 +9,7 @@ Created on Thu Apr 10 10:54:56 2025
 import ipdb
 import os
 import numpy as np
+import random
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -71,6 +72,22 @@ def main(model_name,
         vus_i = get_metrics(score=score_local, labels=label, metric="vus", slidingWindow=slidingWindow_local)
         range_auc_i = get_metrics(score=score_local, labels=label, metric="range_auc", slidingWindow=slidingWindow_local)
         print("Model :", model_name, vus_i, range_auc_i)
+    else:
+        vus_i = {'VUS_ROC': np.float64(random.random()), 'VUS_PR': np.float64(random.random())}
+        range_auc_i = {'R_AUC_ROC': np.float64(random.random()), 'R_AUC_PR': np.float64(random.random())}
+        print("TEST MODE -- Model :", model_name, vus_i, range_auc_i)
+      
+    metrics_names = {'VUS_ROC', 'VUS_PR','R_AUC_ROC', 'R_AUC_PR'}
+    
+    for m_i in metrics_names:
+        with open(metrics_dir_local + '/' + m_i + '.csv', 'a') as f:
+            local_metric_value = None
+            if "VUS" in m_i:
+                local_metric_value = vus_i[m_i]
+            else:
+                local_metric_value = range_auc_i[m_i]
+            print('ESA_ADB_Mission_1@Channel_{}, {}'.format(channel_index_of_interrest, local_metric_value), file=f)
+
          
     
     pass
