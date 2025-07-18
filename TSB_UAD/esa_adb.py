@@ -77,10 +77,23 @@ def main(model_name,
         range_auc_i = {'R_AUC_ROC': np.float64(random.random()), 'R_AUC_PR': np.float64(random.random())}
         print("TEST MODE -- Model :", model_name, vus_i, range_auc_i)
       
-    metrics_names = {'VUS_ROC', 'VUS_PR','R_AUC_ROC', 'R_AUC_PR'}
+    metrics_names = {'VUS_ROC', 'VUS_PR','R_AUC_ROC', 'R_AUC_PR'}    
     
     for m_i in metrics_names:
-        with open(metrics_dir_local + '/' + m_i + '.csv', 'a') as f:
+        
+        metric_filename = metrics_dir_local + '/' + m_i + '.csv'
+        
+        bool_metric_file_does_exist = False
+        # Check if the file exists
+        if os.path.exists(metric_filename):
+           bool_metric_file_does_exist = True
+        
+        
+        with open(metric_filename, 'a') as f:            
+            
+            if not bool_metric_file_does_exist:
+                print(',' + model_name.upper(), file=f)
+                
             local_metric_value = None
             if "VUS" in m_i:
                 local_metric_value = vus_i[m_i]
