@@ -99,7 +99,8 @@ def main(model_name,
                 local_metric_value = vus_i[m_i]
             else:
                 local_metric_value = range_auc_i[m_i]
-            print('ESA_ADB_Mission_1@Channel_{}, {}'.format(channel_index_of_interrest, local_metric_value), file=f)
+                
+            print(path_to_esa_dataset + '@Channel_{}, {}'.format(channel_index_of_interrest, local_metric_value), file=f)
 
          
     
