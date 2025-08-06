@@ -14,9 +14,9 @@ main() {
     channel=$3
     local_log_file_name=$4
     
-    path_to_dataset=../data/ESA-ADB/binarized/multivariate/  #../data/ESA-ADB/data/preprocessed/multivariate/
+    path_to_dataset=data/ESA-ADB/binarized/multivariate/  #../data/ESA-ADB/data/preprocessed/multivariate/
     extension=/84_months.test.csv #/42_months.train.csv
-    results_path=../results/benchmark_esa_binarized/
+    results_path=../../MSAD/data/benchmark_esa_binarized/
     n_jobs=48
     
     python -m TSB_UAD.esa_adb -m $algorith_i -pthd $path_to_dataset$dataset$extension -ch $channel --n-jobs $n_jobs -pths $results_path >> $local_log_file_name
