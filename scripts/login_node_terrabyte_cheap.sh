@@ -8,7 +8,7 @@
 #SBATCH --nodes=1 
 #SBATCH --ntasks-per-node=1 
 #SBATCH --gres=gpu:1 
-#SBATCH --time=07:00:00
+#SBATCH --time=08:00:00
 #SBATCH --output=gpu-out.%j
 #SBATCH --error=gpu-err.%j
 #SBATCH --mem=99000
